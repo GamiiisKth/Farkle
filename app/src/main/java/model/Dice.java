@@ -3,34 +3,69 @@ package model;
 /**
  * Created by joshuapro on 15-07-13.
  */
-public class Dice {
+public class Dice  extends Observers {
     private boolean mark=false;
     private boolean save=false;
     private int diceSide=0;
 
-
-    public boolean isMark() {
-        return mark;
+    public Dice(Game game){
+        this.game=game;
+        this.game.attach(this);
     }
 
-    public void setMark(boolean mark) {
-        this.mark = mark;
-    }
-
-    public boolean isSave() {
-        return save;
-    }
-
-    public void setSave(boolean save) {
-        this.save = save;
-    }
 
     public int getDiceSide() {
         return diceSide;
     }
-
     public void setDiceSide(int diceSide) {
         this.diceSide = diceSide;
+    }
+    public boolean isMark() {
+        return mark;
+    }
+    public void setMark() {
+        this.mark = true;
+    }
+    public boolean isSave() {
+        return save;
+    }
+    public void setSave() {
+        this.save = true;
+    }
+    public void cancelSaved(){
+        this.save=false;
+    }
+    public void cancelMark(){
+        this.save=false;
+    }
+
+
+
+
+    @Override
+    public void updateMarkState() {
+
+        setMark();
+    }
+
+    @Override
+    public void updateSaveState() {
+
+        setSave();
+    }
+
+    @Override
+    public void reset() {
+        cancelMark();
+        cancelSaved();
+        setDiceSide(0);
+    }
+
+
+    @Override
+    public void updateFromMarkToSave() {
+        cancelMark();
+        setSave();
     }
 
 
