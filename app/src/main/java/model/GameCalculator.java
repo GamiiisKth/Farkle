@@ -7,47 +7,28 @@ import java.util.Arrays;
  */
 public class GameCalculator {
    private  int [] unique;
-   private Dice [] deck;
-   private     int [] markedDiceArray;
+   private  Dice [] deck;
+   private int [] markedDiceArray;
+
+    public Dice[] getDeck() {
+        return deck;
+    }
+    public void setDeck(Dice[] deck) {
+        this.deck = deck;
+    }
+
 
     public void throwDice(){
-
-        //     if (countSave()==6 && checkForStraightFlush(markedDiceArray)){
-        //       resetFromSaveToNewDice();
-        //    }
-
-        for (int a = 0; a <= deck.length - 1; a++) {
-
-            if (!deck[a].isSave() ){
-                deck[a].setDiceSide((int) ((Math.random() * 6) + 1));
+       for (int a = 0; a <= getDeck().length - 1; a++) {
+            if (!getDeck()[a].isSave() ){
+                getDeck()[a].setDiceSide((int) ((Math.random() * 6) + 1));
                 // a+1 för stege
                 // (int) ((Math.random() * 6) + 1)
             }
 
         }
+            checkMarkDice();
 
-
-    }
-    // under omgången
-    public int RoundScoreValue(){
-        int sum=0;
-
-        Arrays.sort(markedDiceArray);
-
-        if (checkForStraightFlush(markedDiceArray)){
-            sum=1000;
-
-        }else{
-
-            sum=trippleOrOneORFive(markedDiceArray);
-
-            //TODO arrayen kolla om det behövs
-            Arrays.fill(unique, 0);
-
-
-        }
-
-        return  sum;
     }
 
     private void checkMarkDice(){
@@ -58,9 +39,24 @@ public class GameCalculator {
             }
         }
     }
+    // under omgången
+    public int RoundScoreValue(){
+        int sum=0;
+
+        Arrays.sort(markedDiceArray);
+
+        if (checkForStraightFlush(markedDiceArray)){
+            sum=1000;
+        }else{
+            sum=trippleOrOneORFive(markedDiceArray);
+            //TODO arrayen kolla om det behövs
+            Arrays.fill(unique, 0);
+        }
+
+        return  sum;
+    }
 
     private   boolean checkForStraightFlush(int [] chek){
-
         boolean chekNext=true;
         int i=0;
         while (chekNext && i < chek.length-1){
@@ -94,8 +90,6 @@ public class GameCalculator {
 
             }
         }
-
-
         return 0;
     }
 
@@ -121,10 +115,7 @@ public class GameCalculator {
             s+= nrOfOneOrFive*100;
         } if (key == 5 && nrOfOneOrFive <3 ){
             s+= nrOfOneOrFive*50;
-
-
         }
-
         return s;
     }
 

@@ -12,7 +12,6 @@ public class Game  {
 
     private Dice dice;
 
-
     public Dice getState(){
         return dice;
     }
@@ -21,7 +20,6 @@ public class Game  {
         this.dice=dice;
         notifyMarkObservers();
     }
-
     public void attach(Observers Observers){
         observer.add(Observers);
     }
