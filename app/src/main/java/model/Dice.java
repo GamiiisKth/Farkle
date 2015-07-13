@@ -8,9 +8,9 @@ public class Dice  extends Observers {
     private boolean save=false;
     private int diceSide=0;
 
-    public Dice(Game game){
-        this.game=game;
-        this.game.attach(this);
+    public Dice(Subject subject){
+        this.subject=subject;
+        this.subject.attach(this);
     }
 
 

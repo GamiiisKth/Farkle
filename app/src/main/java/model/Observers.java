@@ -8,7 +8,7 @@ package model;
     public abstract class Observers {
 
 
-        protected Game game;
+        protected Subject subject;
         public abstract void updateMarkState();
         public abstract void updateSaveState();
         public abstract void updateFromMarkToSave();
