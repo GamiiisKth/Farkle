@@ -14,6 +14,10 @@ public class GameCalculator {
         return deck;
     }
     public void setDeck(Dice[] deck) {
+     this.deck= new Dice[deck.length];
+       for (int i=0; i<= deck.length-1; i++){
+           this.deck[i]=deck[i];
+       }
         this.deck = deck;
     }
 
