@@ -57,10 +57,13 @@ public class GameCalculator {
     }
 
     private   boolean checkForStraightFlush(int [] chek){
+        if (chek.length < 6){
+            return false;
+        }
         boolean chekNext=true;
         int i=0;
         while (chekNext && i < chek.length-1){
-            if (chek[i]==(chek[i]+1)) {
+            if ((chek[i]+1)==(chek[i+1])) {
 
                 i++ ;
             }
