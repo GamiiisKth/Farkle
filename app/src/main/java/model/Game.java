@@ -86,6 +86,10 @@ public class Game  {
         this.throwButton = throwButton;
     }
 
+    public boolean[] getSelectImageEnable() {
+        return selectImageEnable;
+    }
+
     public Game(){
         dices= new Dice[6];
     }
@@ -141,7 +145,6 @@ public class Game  {
 
 
     private void calculateRoundScore(){
-        if (scoreButton) {
             setRoundScore(gameCalculator.RoundScoreValue());
             if (isFirstRound() && getRoundScore() > 300) {
                 System.out.println("firstround access");
@@ -163,7 +166,7 @@ public class Game  {
                 middleOfGame();
             }
         }
-    }
+
 
     public void gameFirstRound(){
         // disable touch imagebutton
