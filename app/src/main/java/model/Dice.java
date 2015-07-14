@@ -3,15 +3,11 @@ package model;
 /**
  * Created by joshuapro on 15-07-13.
  */
-public class Dice  extends Observers {
+public class Dice   {
     private boolean mark=false;
     private boolean save=false;
     private int diceSide=0;
 
-    public Dice(Subject subject){
-        this.subject=subject;
-        this.subject.attach(this);
-    }
 
 
     public int getDiceSide() {
@@ -39,22 +35,6 @@ public class Dice  extends Observers {
         this.save=false;
     }
 
-
-
-
-    @Override
-    public void updateMarkState() {
-
-        setMark();
-    }
-
-    @Override
-    public void updateSaveState() {
-
-        setSave();
-    }
-
-    @Override
     public void reset() {
         cancelMark();
         cancelSaved();
@@ -62,11 +42,7 @@ public class Dice  extends Observers {
     }
 
 
-    @Override
-    public void updateFromMarkToSave() {
-        cancelMark();
-        setSave();
-    }
+
 
 
 }

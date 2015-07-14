@@ -5,6 +5,7 @@ import android.widget.Toast;
 import com.kth.quiz.farkle.GameActivity;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
@@ -19,7 +20,8 @@ public class Game  {
    private int roundScore=0;
    private int round=0;
    private int gameTotalScore=0;
-   private int [] imagevalue;
+   private boolean [] selectImageEnable;
+    // Hashmap för att kunna visa en listview med varje round och resultatet
    private HashMap<Integer,Integer> roundAndScore=new HashMap<Integer,Integer>();
    private boolean saveButton=false;
    private boolean throwButton=false;
@@ -31,8 +33,8 @@ public class Game  {
         return firstRound;
     }
 
-    public void setFirstRound() {
-        this.firstRound = true;
+    public void setFirstRound(boolean firstRound) {
+        this.firstRound = firstRound;
     }
 
     public int getRoundScore() {
@@ -90,28 +92,39 @@ public class Game  {
 
     // start a new game
     public void startGame(){
-        imagevalue = new int[dices.length];
+        selectImageEnable = new boolean[dices.length];
         for (int i =0; i<= dices.length-1; i++){
-            dices[i]=new Dice(subject);
-            imagevalue[i]=1;
+            dices[i]=new Dice();
+            selectImageEnable[i]=false;
         }
     }
 
     public void onThrow(){
-        if (isThrowButton()) {
+        if (isFirstRound()){
+            setRound(getRound()+1);
+        }
             setSaveButton(false);
-            setScoreButton(false);
-            setRoundScore(getRound()+1);
-            roundAndScore.put(getRound(),0);
+            setScoreButton(true);
+            setThrowButton(false);
+
+            roundAndScore.put(getRound(),getRoundScore());
             for (int a = 0; a <= dices.length - 1; a++) {
                 if (!dices[a].isSave()) {
                     dices[a].setDiceSide((int) ((Math.random() * 6) + 1));
+                    selectImageEnable[a]=true;
                     // a+1 för stege
                     // (int) ((Math.random() * 6) + 1)
                 }
             }
-            checkMarkDice();
-        }
+
+
+    }
+    public void onScore(){
+        checkMarkDice();
+        calculateRoundScore();
+    }
+    public void onSave(){
+        endOfGame();
     }
 
     private void checkMarkDice(){
@@ -119,18 +132,21 @@ public class Game  {
         for (int i=0; i<= dices.length-1; i++) {
             if (dices[i].isMark()) {
                 markedDiceArray[i] = dices[i].getDiceSide();
+                dices[i].setSave();
+                selectImageEnable[i]=false;
             }
         }
         gameCalculator.setMarkedDiceArray(markedDiceArray);
     }
 
 
-    public void calculateRoundScore(){
+    private void calculateRoundScore(){
         if (scoreButton) {
             setRoundScore(gameCalculator.RoundScoreValue());
             if (isFirstRound() && getRoundScore() > 300) {
                 System.out.println("firstround access");
 
+                setFirstRound(false);
                 gameFirstRound();
 
             } else if (isFirstRound() && getRoundScore() < 300) {
@@ -138,6 +154,7 @@ public class Game  {
                 //TODO end the round
 
                 roundAndScore.put(getRound(),0);
+                setFirstRound(true);
                     setThrowButton(true);
                     setSaveButton(false);
                     setScoreButton(false);
@@ -153,7 +170,7 @@ public class Game  {
 
      setSaveButton(true);
      setScoreButton(false);
-     setThrowButton(false);
+     setThrowButton(true);
      roundAndScore.put(getRound(),(roundAndScore.get(getRound())) + getRoundScore());
     }
 
@@ -162,19 +179,22 @@ public class Game  {
 
     if (getRoundScore()>50){
         setSaveButton(true);
-        setScoreButton(false);
+        setScoreButton(true);
         setThrowButton(false);
         roundAndScore.put(getRound(),(roundAndScore.get(getRound())) + getRoundScore());
      }else {
+        setFirstRound(true);
         roundAndScore.put(getRound(),0);
-        subject.notifySaveObservers();
         endOfGame();
     }
     }
     public void endOfGame(){
+        setFirstRound(true);
+        setThrowButton(true);
         setSaveButton(false);
         setScoreButton(false);
-        subject.reset();
+        reset();
+        Arrays.fill(selectImageEnable,true);
     }
 
     private void sumOfGame(){
@@ -185,6 +205,13 @@ public class Game  {
 
         }
         setGameTotalScore(sum);
+    }
+    private void reset(){
+        for (Dice d: dices){
+            d.setDiceSide(0);
+            d.cancelMark();
+            d.cancelSaved();
+        }
     }
 
 }
