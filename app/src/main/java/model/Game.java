@@ -1,14 +1,8 @@
 package model;
 
-import android.widget.Toast;
-
-import com.kth.quiz.farkle.GameActivity;
-
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by joshuapro on 15-07-13.
@@ -21,7 +15,7 @@ public class Game  {
    private int round=0;
    private int gameTotalScore=0;
    private boolean [] selectImageEnable;
-    // Hashmap för att kunna visa en listview med varje round och resultatet
+    // Hashmap fï¿½r att kunna visa en listview med varje round och resultatet
    private HashMap<Integer,Integer> roundAndScore=new HashMap<Integer,Integer>();
    private boolean saveButton=false;
    private boolean throwButton=false;
@@ -90,12 +84,17 @@ public class Game  {
         return selectImageEnable;
     }
 
+    public Dice[] getDices() {
+        return dices;
+    }
+
     public Game(){
-        dices= new Dice[6];
+
     }
 
     // start a new game
     public void startGame(){
+        dices= new Dice[6];
         selectImageEnable = new boolean[dices.length];
         for (int i =0; i<= dices.length-1; i++){
             dices[i]=new Dice();
@@ -111,12 +110,12 @@ public class Game  {
             setScoreButton(true);
             setThrowButton(false);
 
-            roundAndScore.put(getRound(),getRoundScore());
+            roundAndScore.put(getRound(), getRoundScore());
             for (int a = 0; a <= dices.length - 1; a++) {
                 if (!dices[a].isSave()) {
                     dices[a].setDiceSide((int) ((Math.random() * 6) + 1));
                     selectImageEnable[a]=true;
-                    // a+1 för stege
+                    // a+1 fï¿½r stege
                     // (int) ((Math.random() * 6) + 1)
                 }
             }
@@ -130,6 +129,7 @@ public class Game  {
     public void onSave(){
         endOfGame();
     }
+
 
     private void checkMarkDice(){
         int []markedDiceArray= new int[dices.length];
