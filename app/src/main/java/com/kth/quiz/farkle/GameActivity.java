@@ -39,7 +39,7 @@ public class GameActivity extends ActionBarActivity {
 
     private TextView mScoreText;
     private TextView mRoundText;
-    private TextView mGameScoreText;
+    private TextView gameStateScoreText;
 
 
     @Override
@@ -48,14 +48,15 @@ public class GameActivity extends ActionBarActivity {
         setContentView(R.layout.activity_game);
 
         gameState = new GameState();
+        gameState.startGame();
 
         mSaveButton = (Button) findViewById(R.id.save_Button);
         mScoreButton = (Button) findViewById(R.id.Score_Button);
         mThrowButton = (Button) findViewById(R.id.throw_Button);
 
-        mScoreText=(TextView) findViewById(R.id.Score_Value);
-        mRoundText=(TextView)findViewById(R.id.round_Value);
-        mGameScoreText=(TextView) findViewById(R.id.Game_Score_Value);
+        mScoreText = (TextView) findViewById(R.id.Score_Value);
+        mRoundText = (TextView) findViewById(R.id.round_Value);
+        gameStateScoreText = (TextView) findViewById(R.id.Game_Score_Value);
 
         mImagePic1 = (ImageButton) findViewById(R.id.pic1);
         mImagePic1.setOnClickListener(new View.OnClickListener() {
@@ -99,7 +100,6 @@ public class GameActivity extends ActionBarActivity {
 
             }
         });
-        updateView();
 
         mScoreButton.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -121,16 +121,18 @@ public class GameActivity extends ActionBarActivity {
                 gameState.onThrow();
             }
         });
+        updateView();
+
 
     }
 
 
     private void updateView() {
-        mScoreButton.setEnabled(gameState.isScoreButtonState());
-        mThrowButton.setEnabled(gameState.isThrowButtonState());
-        mSaveButton.setEnabled(gameState.isSaveButtonState());
+        mScoreButton.setEnabled(gameState.isScoreButton());
+        mThrowButton.setEnabled(gameState.isThrowButton());
+        mSaveButton.setEnabled(gameState.isSaveButton());
 
-        isImageViewSelectEnabled();
+
 
         mImagePic1.setSelected(pic1);
         mImagePic2.setSelected(pic2);
@@ -139,27 +141,83 @@ public class GameActivity extends ActionBarActivity {
         mImagePic5.setSelected(pic5);
         mImagePic6.setSelected(pic6);
 
-        mScoreText.setText(gameState.getScoreOfRound());
-        mGameScoreText.setText(gameState.getSumOfGame());
-        mRoundText.setText(gameState.getRound());
+        mScoreText.setText(" "+gameState.getRoundScore());
+        gameStateScoreText.setText(" "+gameState.getGameTotalScore());
+        mRoundText.setText(" "+gameState.getRound());
 
-        getDiceView();
+        isImageViewSelectEnabled();
+
+        updateDiceView(mImagePic1, 0, gameState.getDices()[0].getDiceSide());
+        updateDiceView(mImagePic1, 1, gameState.getDices()[1].getDiceSide());
+        updateDiceView(mImagePic1, 2, gameState.getDices()[2].getDiceSide());
+        updateDiceView(mImagePic1, 3, gameState.getDices()[3].getDiceSide());
+        updateDiceView(mImagePic1, 4, gameState.getDices()[4].getDiceSide());
+        updateDiceView(mImagePic1, 5, gameState.getDices()[5].getDiceSide());
+
+
     }
 
     private void isImageViewSelectEnabled() {
-        pic1=gameState.getImageSelectEnable()[0];
-        pic2=gameState.getImageSelectEnable()[1];
-        pic3=gameState.getImageSelectEnable()[2];
-        pic4=gameState.getImageSelectEnable()[3];
-        pic5=gameState.getImageSelectEnable()[4];
-        pic6=gameState.getImageSelectEnable()[5];
-
+        pic1 = gameState.getSelectImageEnable()[0];
+        pic2 = gameState.getSelectImageEnable()[1];
+        pic3 = gameState.getSelectImageEnable()[2];
+        pic4 = gameState.getSelectImageEnable()[3];
+        pic5 = gameState.getSelectImageEnable()[4];
+        pic6 = gameState.getSelectImageEnable()[5];
 
 
     }
 
-    private void getDiceView(){
+    private void updateDiceView(ImageButton dice, int deckIndex, int diceNr) {
 
-
+        if (diceNr == 1) {
+            if (gameState.getDices()[deckIndex].isSave()) {
+                dice.setImageResource(R.drawable.grey1);
+            } else if (gameState.getDices()[deckIndex].isMark()) {
+                dice.setImageResource(R.drawable.red1);
+            } else {
+                dice.setImageResource(R.drawable.white1);
+            }
+        } else if (diceNr == 2) {
+            if (gameState.getDices()[deckIndex].isSave()) {
+                dice.setImageResource(R.drawable.grey2);
+            } else if (gameState.getDices()[deckIndex].isMark()) {
+                dice.setImageResource(R.drawable.red2);
+            } else {
+                dice.setImageResource(R.drawable.white2);
+            }
+        } else if (diceNr == 3) {
+            if (gameState.getDices()[deckIndex].isSave()) {
+                dice.setImageResource(R.drawable.grey1);
+            } else if (gameState.getDices()[deckIndex].isMark()) {
+                dice.setImageResource(R.drawable.red3);
+            } else {
+                dice.setImageResource(R.drawable.white3);
+            }
+        } else if (diceNr == 4) {
+            if (gameState.getDices()[deckIndex].isSave()) {
+                dice.setImageResource(R.drawable.grey4);
+            } else if (gameState.getDices()[deckIndex].isMark()) {
+                dice.setImageResource(R.drawable.red4);
+            } else {
+                dice.setImageResource(R.drawable.white4);
+            }
+        } else if (diceNr == 5) {
+            if (gameState.getDices()[deckIndex].isSave()) {
+                dice.setImageResource(R.drawable.grey5);
+            } else if (gameState.getDices()[deckIndex].isMark()) {
+                dice.setImageResource(R.drawable.red5);
+            } else {
+                dice.setImageResource(R.drawable.white5);
+            }
+        } else if (diceNr == 6) {
+            if (gameState.getDices()[deckIndex].isSave()) {
+                dice.setImageResource(R.drawable.grey6);
+            } else if (gameState.getDices()[deckIndex].isMark()) {
+                dice.setImageResource(R.drawable.red6);
+            } else {
+                dice.setImageResource(R.drawable.white6);
+            }
+        }
     }
 }

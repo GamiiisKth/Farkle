@@ -1,138 +1,231 @@
 package com.kth.quiz.farkle;
 
-import android.os.Parcel;
-import android.os.Parcelable;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.HashMap;
 
 import model.Dice;
-import model.Game;
+import model.GameCalculator;
+import model.Subject;
 
 /**
  * Created by joshuapro on 15-07-13.
  */
-public class GameState implements Parcelable {
-private Game game;
-private int round;
-private int scoreOfRound;
-private int sumOfGame;
-private boolean saveButtonState;
-private boolean scoreButtonState;
-private boolean throwButtonState;
+public class GameState  {
 
+    private Dice[] dices;
+    private Subject subject;
+    private boolean firstRound;
+    private int roundScore;
+    private int round;
+    private int gameTotalScore;
+    private boolean [] selectImageEnable;
+    // Hashmap f�r att kunna visa en listview med varje round och resultatet
+    private HashMap<Integer,Integer> roundAndScore=new HashMap<Integer,Integer>();
+    private boolean saveButton;
+    private boolean throwButton;
+    private boolean scoreButton;
 
-
-
-    protected GameState(Parcel in){
-        round=in.readInt();
-        scoreOfRound=in.readInt();
-        sumOfGame=in.readInt();
-        boolean  [] val=in.createBooleanArray();
-        saveButtonState=val[0];
-        scoreButtonState=val[1];
-        throwButtonState=val[2];
-
-    }
-    public static final Parcelable.Creator<GameState> CREATOR = new Parcelable.Creator<GameState>() {
-        @Override
-        public GameState createFromParcel(Parcel in) {
-            return new GameState(in);
-        }
-
-        @Override
-        public GameState[] newArray(int size) {
-            return new GameState[size];
-        }
-    };
+    private GameCalculator gameCalculator= new GameCalculator();
 
 
     public GameState(){
+        setFirstRound(true);
+        setGameTotalScore(0);
+        setRoundScore(0);
+        setRound(0);
+        setSaveButton(false);
+        setThrowButton(true);
+        setScoreButton(false);
+    }
+    public boolean isFirstRound() {
+        return firstRound;
     }
 
-    @Override
-    public int describeContents() {
-        return 0;
+    public void setFirstRound(boolean firstRound) {
+        this.firstRound = firstRound;
     }
 
-    @Override
-    public void writeToParcel(Parcel dest, int flags) {
-        dest.writeInt(round);
-        dest.writeInt(scoreOfRound);
-        dest.writeInt(sumOfGame);
-        boolean []val= new boolean[]{
-                isSaveButtonState(),
-                isScoreButtonState(),
-                isThrowButtonState()
-        };
-
-
+    public int getRoundScore() {
+        return roundScore;
     }
 
-    public Dice[] getDice(){
-
-     return  game.getDices();
+    public void setRoundScore(int roundScore) {
+        this.roundScore = roundScore;
     }
 
-    public void startGame(){
-        game.startGame();
-    }
-
-    public void onThrow(){
-        game.onThrow();
-    }
-    public void onSave(){
-        game.onSave();
-    }
-    public void onScore(){
-        game.onScore();
-    }
-
-    public void setRound() {
-        this.round = game.getRound();
-    }
-
-    public void setSumOfGame() {
-        this.sumOfGame = game.getGameTotalScore();
-    }
-
-    public void setScoreOfRound() {
-        this.scoreOfRound = game.getRoundScore();
-    }
-
-    public void setSaveButtonState() {
-        this.saveButtonState = game.isSaveButton();
-    }
-
-    public void setScoreButtonState() {
-        this.scoreButtonState = game.isScoreButton();
-    }
-
-    public void setThrowButtonState() {
-        this.throwButtonState = game.isThrowButton();
+    public void setRound(int round) {
+        this.round = round;
     }
 
     public int getRound() {
         return round;
     }
 
-    public int getScoreOfRound() {
-        return scoreOfRound;
+    public int getGameTotalScore() {
+        sumOfGame();
+        return gameTotalScore;
     }
 
-    public int getSumOfGame() {
-        return sumOfGame;
+    public void setGameTotalScore(int gameTotalScore) {
+        this.gameTotalScore = gameTotalScore;
     }
 
-    public boolean isSaveButtonState() {
-        return saveButtonState;
+    public boolean isSaveButton() {
+        return saveButton;
     }
 
-    public boolean isScoreButtonState() {
-        return scoreButtonState;
+    public boolean isScoreButton() {
+        return scoreButton;
     }
 
-    public boolean isThrowButtonState() {
-        return throwButtonState;
+    public boolean isThrowButton() {
+        return throwButton;
     }
-    public boolean [] getImageSelectEnable(){
-        return game.getSelectImageEnable();
+
+    public void setSaveButton(boolean saveButton) {
+        this.saveButton = saveButton;
+    }
+
+    public void setScoreButton(boolean scoreButton) {
+        this.scoreButton = scoreButton;
+    }
+
+    public void setThrowButton(boolean throwButton) {
+        this.throwButton = throwButton;
+    }
+
+    public boolean[] getSelectImageEnable() {
+        return selectImageEnable;
+    }
+
+    public Dice[] getDices() {
+        return dices;
+    }
+
+
+    // start a new game
+    public void startGame(){
+        dices= new Dice[6];
+        selectImageEnable = new boolean[dices.length];
+        for (int i =0; i<= dices.length-1; i++){
+            dices[i]=new Dice();
+            selectImageEnable[i]=false;
+        }
+    }
+
+    public void onThrow(){
+        if (isFirstRound()){
+            setRound(getRound()+1);
+        }
+        setSaveButton(false);
+        setScoreButton(true);
+        setThrowButton(false);
+
+        roundAndScore.put(getRound(), getRoundScore());
+        for (int a = 0; a <= dices.length - 1; a++) {
+            if (!dices[a].isSave()) {
+                dices[a].setDiceSide((int) ((Math.random() * 6) + 1));
+                selectImageEnable[a]=true;
+                // a+1 f�r stege
+                // (int) ((Math.random() * 6) + 1)
+            }
+        }
+
+
+    }
+    public void onScore(){
+        checkMarkDice();
+        calculateRoundScore();
+    }
+    public void onSave(){
+        endOfGame();
+    }
+
+
+    private void checkMarkDice(){
+        int []markedDiceArray= new int[dices.length];
+        for (int i=0; i<= dices.length-1; i++) {
+            if (dices[i].isMark()) {
+                markedDiceArray[i] = dices[i].getDiceSide();
+                dices[i].setSave();
+                selectImageEnable[i]=false;
+            }
+        }
+        gameCalculator.setMarkedDiceArray(markedDiceArray);
+    }
+
+
+    private void calculateRoundScore(){
+        setRoundScore(gameCalculator.RoundScoreValue());
+        if (isFirstRound() && getRoundScore() > 300) {
+            System.out.println("firstround access");
+
+            setFirstRound(false);
+            gameFirstRound();
+
+        } else if (isFirstRound() && getRoundScore() < 300) {
+            System.out.println("first round is over");
+            //TODO end the round
+
+            roundAndScore.put(getRound(),0);
+            setFirstRound(true);
+            setThrowButton(true);
+            setSaveButton(false);
+            setScoreButton(false);
+
+        } else {
+            middleOfGame();
+        }
+    }
+
+
+    public void gameFirstRound(){
+        // disable touch imagebutton
+
+        setSaveButton(true);
+        setScoreButton(false);
+        setThrowButton(true);
+        roundAndScore.put(getRound(),(roundAndScore.get(getRound())) + getRoundScore());
+    }
+
+
+    public void middleOfGame(){
+
+        if (getRoundScore()>50){
+            setSaveButton(true);
+            setScoreButton(true);
+            setThrowButton(false);
+            roundAndScore.put(getRound(),(roundAndScore.get(getRound())) + getRoundScore());
+        }else {
+            setFirstRound(true);
+            roundAndScore.put(getRound(),0);
+            endOfGame();
+        }
+    }
+    public void endOfGame(){
+        setFirstRound(true);
+        setThrowButton(true);
+        setSaveButton(false);
+        setScoreButton(false);
+        reset();
+        Arrays.fill(selectImageEnable, true);
+    }
+
+    private void sumOfGame(){
+        int sum=0;
+        Collection<Integer> values=roundAndScore.values();
+        for (Integer value: values){
+            sum+=value;
+
+        }
+        setGameTotalScore(sum);
+    }
+    private void reset(){
+        for (Dice d: dices){
+            d.setDiceSide(0);
+            d.cancelMark();
+            d.cancelSaved();
+        }
     }
 }
