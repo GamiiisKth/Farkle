@@ -9,14 +9,7 @@ import java.util.List;
 public class Subject  {
     private List<Observers> observer=new ArrayList<Observers>();
 
-    private Dice dice;
-
-    public Dice getState(){
-        return dice;
-    }
-
-    public void setStatMark(Dice dice){
-        this.dice=dice;
+    public void setStatMark(){
         notifyMarkObservers();
     }
     public void attach(Observers Observers){
@@ -26,6 +19,7 @@ public class Subject  {
     public void ditach(Observers obs){
         observer.remove(obs);
     }
+
     public void notifyMarkObservers(){
         for (Observers obs: observer){
             obs.updateMarkState();

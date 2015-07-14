@@ -7,42 +7,18 @@ import java.util.Arrays;
  */
 public class GameCalculator {
    private  int [] unique;
-   private  Dice [] deck;
    private int [] markedDiceArray;
 
-    public Dice[] getDeck() {
-        return deck;
-    }
-    public void setDeck(Dice[] deck) {
-     this.deck= new Dice[deck.length];
-       for (int i=0; i<= deck.length-1; i++){
-           this.deck[i]=deck[i];
-       }
-        this.deck = deck;
-    }
 
+    public void setMarkedDiceArray(int[] marked) {
+        marked = new int[marked.length];
 
-    public void throwDice(){
-       for (int a = 0; a <= getDeck().length - 1; a++) {
-            if (!getDeck()[a].isSave() ){
-                getDeck()[a].setDiceSide((int) ((Math.random() * 6) + 1));
-                // a+1 för stege
-                // (int) ((Math.random() * 6) + 1)
-            }
-
+        for (int i=0;i<= marked.length-1; i++){
+            markedDiceArray[i]=marked[i];
         }
-            checkMarkDice();
-
+        this.markedDiceArray = marked;
     }
 
-    private void checkMarkDice(){
-        markedDiceArray =new int [deck.length];
-        for (int i=0; i<= deck.length-1; i++) {
-            if (deck[i].isMark()) {
-                markedDiceArray[i] = deck[i].getDiceSide();
-            }
-        }
-    }
     // under omgången
     public int RoundScoreValue(){
         int sum=0;
