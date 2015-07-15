@@ -51,8 +51,29 @@ public class GameActivity extends ActionBarActivity {
         gameState.startGame();
 
         mSaveButton = (Button) findViewById(R.id.save_Button);
+        mSaveButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gameState.onSave();
+                updateView();
+            }
+        });
         mScoreButton = (Button) findViewById(R.id.Score_Button);
+        mScoreButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gameState.onScore();
+                updateView();
+            }
+        });
         mThrowButton = (Button) findViewById(R.id.throw_Button);
+        mThrowButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                gameState.onThrow();
+                updateView();
+            }
+        });
 
         mScoreText = (TextView) findViewById(R.id.Score_Value);
         mRoundText = (TextView) findViewById(R.id.round_Value);
@@ -62,6 +83,15 @@ public class GameActivity extends ActionBarActivity {
         mImagePic1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!gameState.getDices()[0].isMark() && !gameState.getDices()[0].isSave() ){
+                    gameState.getDices()[0].setMark(true);
+
+                    updateView();
+                }else if (!gameState.getDices()[0].isSave()){
+                    gameState.getDices()[0].setMark(false);
+                    updateView();
+                }
+
 
             }
         });
@@ -69,6 +99,14 @@ public class GameActivity extends ActionBarActivity {
         mImagePic2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!gameState.getDices()[1].isMark() && !gameState.getDices()[1].isSave() ){
+                    gameState.getDices()[1].setMark(true);
+
+                    updateView();
+                }else if (!gameState.getDices()[1].isSave()){
+                    gameState.getDices()[1].setMark(false);
+                    updateView();
+                }
 
             }
         });
@@ -76,6 +114,14 @@ public class GameActivity extends ActionBarActivity {
         mImagePic3.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!gameState.getDices()[2].isMark() && !gameState.getDices()[2].isSave() ){
+                    gameState.getDices()[2].setMark(true);
+
+                    updateView();
+                }else if (!gameState.getDices()[2].isSave()){
+                    gameState.getDices()[2].setMark(false);
+                    updateView();
+                }
 
             }
         });
@@ -83,6 +129,14 @@ public class GameActivity extends ActionBarActivity {
         mImagePic4.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!gameState.getDices()[3].isMark() && !gameState.getDices()[3].isSave() ){
+                    gameState.getDices()[3].setMark(true);
+
+                    updateView();
+                }else if (!gameState.getDices()[3].isSave()){
+                    gameState.getDices()[3].setMark(false);
+                    updateView();
+                }
 
             }
         });
@@ -90,6 +144,14 @@ public class GameActivity extends ActionBarActivity {
         mImagePic5.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!gameState.getDices()[4].isMark() && !gameState.getDices()[4].isSave() ){
+                    gameState.getDices()[4].setMark(true);
+
+                    updateView();
+                }else if (!gameState.getDices()[4].isSave()){
+                    gameState.getDices()[4].setMark(false);
+                    updateView();
+                }
 
             }
         });
@@ -97,30 +159,19 @@ public class GameActivity extends ActionBarActivity {
         mImagePic6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                if (!gameState.getDices()[5].isMark() && !gameState.getDices()[5].isSave() ){
+                    gameState.getDices()[5].setMark(true);
+
+                    updateView();
+                }else if (!gameState.getDices()[5].isSave()){
+                    gameState.getDices()[5].setMark(false);
+                    updateView();
+                }
 
             }
         });
 
-        mScoreButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gameState.onScore();
-            }
-        });
 
-        mSaveButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gameState.onSave();
-            }
-        });
-
-        mThrowButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                gameState.onThrow();
-            }
-        });
         updateView();
 
 
@@ -141,18 +192,18 @@ public class GameActivity extends ActionBarActivity {
         mImagePic5.setSelected(pic5);
         mImagePic6.setSelected(pic6);
 
-        mScoreText.setText(" "+gameState.getRoundScore());
+        mScoreText.setText(" " + gameState.getRoundScore());
         gameStateScoreText.setText(" "+gameState.getGameTotalScore());
         mRoundText.setText(" "+gameState.getRound());
 
         isImageViewSelectEnabled();
 
         updateDiceView(mImagePic1, 0, gameState.getDices()[0].getDiceSide());
-        updateDiceView(mImagePic1, 1, gameState.getDices()[1].getDiceSide());
-        updateDiceView(mImagePic1, 2, gameState.getDices()[2].getDiceSide());
-        updateDiceView(mImagePic1, 3, gameState.getDices()[3].getDiceSide());
-        updateDiceView(mImagePic1, 4, gameState.getDices()[4].getDiceSide());
-        updateDiceView(mImagePic1, 5, gameState.getDices()[5].getDiceSide());
+        updateDiceView(mImagePic2, 1, gameState.getDices()[1].getDiceSide());
+        updateDiceView(mImagePic3, 2, gameState.getDices()[2].getDiceSide());
+        updateDiceView(mImagePic4, 3, gameState.getDices()[3].getDiceSide());
+        updateDiceView(mImagePic5, 4, gameState.getDices()[4].getDiceSide());
+        updateDiceView(mImagePic6, 5, gameState.getDices()[5].getDiceSide());
 
 
     }

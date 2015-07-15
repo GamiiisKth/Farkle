@@ -11,7 +11,7 @@ public class GameCalculator {
 
 
     public void setMarkedDiceArray(int[] marked) {
-        marked = new int[marked.length];
+        markedDiceArray = new int[marked.length];
 
         for (int i=0;i<= marked.length-1; i++){
             markedDiceArray[i]=marked[i];

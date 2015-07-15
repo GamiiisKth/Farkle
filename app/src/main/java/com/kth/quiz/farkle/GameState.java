@@ -148,7 +148,7 @@ public class GameState  {
         for (int i=0; i<= dices.length-1; i++) {
             if (dices[i].isMark()) {
                 markedDiceArray[i] = dices[i].getDiceSide();
-                dices[i].setSave();
+                dices[i].setSave(true);
                 selectImageEnable[i]=false;
             }
         }
@@ -157,6 +157,7 @@ public class GameState  {
 
 
     private void calculateRoundScore(){
+
         setRoundScore(gameCalculator.RoundScoreValue());
         if (isFirstRound() && getRoundScore() > 300) {
             System.out.println("firstround access");
@@ -168,11 +169,12 @@ public class GameState  {
             System.out.println("first round is over");
             //TODO end the round
 
-            roundAndScore.put(getRound(),0);
+            roundAndScore.put(getRound(), 0);
             setFirstRound(true);
             setThrowButton(true);
             setSaveButton(false);
             setScoreButton(false);
+            endOfGame();
 
         } else {
             middleOfGame();
@@ -222,10 +224,11 @@ public class GameState  {
         setGameTotalScore(sum);
     }
     private void reset(){
-        for (Dice d: dices){
+        for (Dice d : dices){
             d.setDiceSide(0);
-            d.cancelMark();
-            d.cancelSaved();
+            d.setMark(false);
+            d.setSave(false);
+//            Arrays.fill(dices,0);
         }
     }
 }

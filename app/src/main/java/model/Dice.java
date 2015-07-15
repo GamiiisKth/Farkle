@@ -19,27 +19,22 @@ public class Dice   {
     public boolean isMark() {
         return mark;
     }
-    public void setMark() {
-        this.mark = true;
-    }
+
     public boolean isSave() {
         return save;
     }
-    public void setSave() {
-        this.save = true;
-    }
-    public void cancelSaved(){
-        this.save=false;
-    }
-    public void cancelMark(){
-        this.save=false;
+
+    public void setMark(boolean mark) {
+        this.mark = mark;
     }
 
-    public void reset() {
-        cancelMark();
-        cancelSaved();
-        setDiceSide(0);
+    public void setSave(boolean save) {
+        this.save = save;
     }
+
+
+
+
 
 
 
