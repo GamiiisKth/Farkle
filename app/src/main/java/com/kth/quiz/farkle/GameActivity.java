@@ -1,6 +1,8 @@
 package com.kth.quiz.farkle;
 
+import android.app.Activity;
 import android.os.Bundle;
+import android.os.PersistableBundle;
 import android.support.v7.app.ActionBarActivity;
 import android.view.View;
 import android.widget.Button;
@@ -8,7 +10,7 @@ import android.widget.ImageButton;
 import android.widget.TextView;
 
 
-public class GameActivity extends ActionBarActivity {
+public class GameActivity extends Activity {
 
     private GameState gameState;
 
@@ -41,14 +43,22 @@ public class GameActivity extends ActionBarActivity {
     private TextView mRoundText;
     private TextView gameStateScoreText;
 
+    private String GAME_STATE_TAG="game";
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_game);
+        if (savedInstanceState !=null){
 
-        gameState = new GameState();
-        gameState.startGame();
+            gameState=savedInstanceState.getParcelable(GAME_STATE_TAG);
+        }else {
+            gameState = new GameState();
+            gameState.startGame();
+
+        }
+
 
         mSaveButton = (Button) findViewById(R.id.save_Button);
         mSaveButton.setOnClickListener(new View.OnClickListener() {
@@ -101,7 +111,6 @@ public class GameActivity extends ActionBarActivity {
             public void onClick(View v) {
                 if (!gameState.getDices()[1].isMark() && !gameState.getDices()[1].isSave() ){
                     gameState.getDices()[1].setMark(true);
-
                     updateView();
                 }else if (!gameState.getDices()[1].isSave()){
                     gameState.getDices()[1].setMark(false);
@@ -177,6 +186,18 @@ public class GameActivity extends ActionBarActivity {
 
     }
 
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        outState.putParcelable(GAME_STATE_TAG,gameState);
+        super.onSaveInstanceState(outState);
+    }
+
+    @Override
+    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+     gameState=savedInstanceState.getParcelable(GAME_STATE_TAG);
+        super.onRestoreInstanceState(savedInstanceState);
+            updateView();
+    }
 
     private void updateView() {
         mScoreButton.setEnabled(gameState.isScoreButton());

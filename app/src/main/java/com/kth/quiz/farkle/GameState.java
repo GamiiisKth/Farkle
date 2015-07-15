@@ -1,5 +1,8 @@
 package com.kth.quiz.farkle;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.HashMap;
@@ -11,36 +14,58 @@ import model.Subject;
 /**
  * Created by joshuapro on 15-07-13.
  */
-public class GameState  {
+public class GameState implements Parcelable {
 
     private Dice[] dices;
     private Subject subject;
-    private boolean firstRound;
+    private boolean firstRound=true;
     private int scoreOfRound=0;
-    private int round;
-    private int gameTotalScore;
+    private int round=0;
+    private int gameTotalScore=0;
     private int []markedDiceArray;
     private boolean [] selectImageEnable;
     // Hashmap f�r att kunna visa en listview med varje round och resultatet
     private HashMap<Integer,Integer> roundAndScore=new HashMap<Integer,Integer>();
-    private boolean saveButton;
-    private boolean throwButton;
-    private boolean scoreButton;
+    private boolean saveButton=false;
+    private boolean throwButton=true;
+    private boolean scoreButton=false;
+
 
     private GameCalculator gameCalculator= new GameCalculator();
 
-
-    public GameState(){
-        setFirstRound(true);
-        setGameTotalScore(0);
-        setRound(0);
-        setScoreOfRound(0);
-        setRoundScoreTomap(getRound(),getScoreOfRound());
-        setSaveButton(false);
-        setThrowButton(true);
-
-        setScoreButton(false);
+    protected  GameState(Parcel in){
+        round=in.readInt();
+        scoreOfRound=in.readInt();
+        gameTotalScore=in.readInt();
+        boolean [] value=in.createBooleanArray();
+        firstRound=value[0];
+        saveButton=value[1];
+        scoreButton=value[2];
+        throwButton=value[3];
     }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+    dest.writeInt(round);
+    dest.writeInt(scoreOfRound);
+    dest.writeInt(gameTotalScore);
+        boolean []value= new boolean[]{
+          isFirstRound(),
+          isFirstRound(),
+          isScoreButton(),
+           isThrowButton()
+        };
+
+    }
+    public GameState(){
+
+    }
+
 
     public int getScoreOfRound() {
         return scoreOfRound;
@@ -131,7 +156,6 @@ public class GameState  {
             setRound(getRound()+1);
             setScoreOfRound(0);
             Arrays.fill(selectImageEnable, true);
-
         }
         setSaveButton(false);
         setScoreButton(true);
@@ -164,10 +188,10 @@ public class GameState  {
                 dices[i].setSave(true);
                 dices[i].setMark(false);
                 selectImageEnable[i]=false;
+
             }
         }
         gameCalculator.setMarkedDiceArray(markedDiceArray);
-
     }
 
 

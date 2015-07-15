@@ -1,11 +1,14 @@
 package model;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.util.Arrays;
 
 /**
  * Created by joshuapro on 15-07-13.
  */
-public class GameCalculator {
+public class GameCalculator  {
    private  int [] unique;
    private int [] markedDiceArray;
 
@@ -137,4 +140,6 @@ public class GameCalculator {
         }
 
     }
+
+
 }
