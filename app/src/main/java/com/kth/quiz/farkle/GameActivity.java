@@ -1,13 +1,21 @@
 package com.kth.quiz.farkle;
 
 import android.app.Activity;
+import android.content.ContentValues;
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.PersistableBundle;
 import android.support.v7.app.ActionBarActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
+
+
+import com.google.gson.Gson;
+
+import model.Game;
 
 
 public class GameActivity extends Activity {
@@ -44,6 +52,7 @@ public class GameActivity extends Activity {
     private TextView gameStateScoreText;
 
     private String GAME_STATE_TAG="game";
+    private String TAG="tag";
 
 
     @Override
@@ -168,27 +177,26 @@ public class GameActivity extends Activity {
         mImagePic6.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                if (!gameState.getDices()[5].isMark() && !gameState.getDices()[5].isSave() ){
+                if (!gameState.getDices()[5].isMark() && !gameState.getDices()[5].isSave()) {
                     gameState.getDices()[5].setMark(true);
 
                     updateView();
-                }else if (!gameState.getDices()[5].isSave()){
+                } else if (!gameState.getDices()[5].isSave()) {
                     gameState.getDices()[5].setMark(false);
                     updateView();
                 }
 
             }
         });
-
-
-        updateView();
-
+            LoadPreferences();
+            updateView();
 
     }
 
+
     @Override
     public void onSaveInstanceState(Bundle outState) {
-        outState.putParcelable(GAME_STATE_TAG,gameState);
+        outState.putParcelable(GAME_STATE_TAG, gameState);
         super.onSaveInstanceState(outState);
     }
 
@@ -196,7 +204,43 @@ public class GameActivity extends Activity {
     protected void onRestoreInstanceState(Bundle savedInstanceState) {
      gameState=savedInstanceState.getParcelable(GAME_STATE_TAG);
         super.onRestoreInstanceState(savedInstanceState);
-            updateView();
+        updateView();
+    }
+
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+        SavePreferences();
+    }
+
+    @Override
+    protected void onDestroy() {
+        gameState.resetTheGame();
+        gameState=null;
+        super.onDestroy();
+    }
+
+    private void SavePreferences() {
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        SharedPreferences.Editor editor = sharedPreferences.edit();
+        Gson gson = new Gson();
+        String json = gson.toJson(gameState);
+        editor.putString(GAME_STATE_TAG, json);
+        editor.apply();
+    }
+
+    private void LoadPreferences() {
+        SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
+        Gson gson = new Gson();
+        String json = sharedPreferences.getString(GAME_STATE_TAG,"");
+        gameState = gson.fromJson(json, GameState.class);
+        System.out.println("load not null");
+        if(gameState==null){
+            Log.d(TAG, "LoadPreferences():  mGame==null");
+                System.out.println("load is null");
+            gameState = new GameState();
+        }
+
     }
 
     private void updateView() {

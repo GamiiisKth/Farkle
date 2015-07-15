@@ -288,4 +288,14 @@ public class GameState implements Parcelable {
         }
         return  i;
     }
+
+    public void resetTheGame(){
+        setScoreButton(false);
+        setSaveButton(false);
+        setThrowButton(true);
+        setRound(0);
+        setScoreOfRound(0);
+        setGameTotalScore(0);
+        setFirstRound(true);
+    }
 }
