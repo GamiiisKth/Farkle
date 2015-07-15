@@ -36,6 +36,7 @@ public class GameState  {
         setRound(0);
         setSaveButton(false);
         setThrowButton(true);
+
         setScoreButton(false);
     }
     public boolean isFirstRound() {
