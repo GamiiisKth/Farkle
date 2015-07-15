@@ -16,9 +16,10 @@ public class GameState  {
     private Dice[] dices;
     private Subject subject;
     private boolean firstRound;
-    private int scoreOfRound;
+    private int scoreOfRound=0;
     private int round;
     private int gameTotalScore;
+    private int []markedDiceArray;
     private boolean [] selectImageEnable;
     // Hashmap f�r att kunna visa en listview med varje round och resultatet
     private HashMap<Integer,Integer> roundAndScore=new HashMap<Integer,Integer>();
@@ -128,6 +129,9 @@ public class GameState  {
     public void onThrow(){
         if (isFirstRound()){
             setRound(getRound()+1);
+            setScoreOfRound(0);
+            Arrays.fill(selectImageEnable, true);
+
         }
         setSaveButton(false);
         setScoreButton(true);
@@ -153,33 +157,40 @@ public class GameState  {
 
 
     private void checkMarkDice(){
-        int []markedDiceArray= new int[dices.length];
+        markedDiceArray= new int[dices.length];
         for (int i=0; i<= dices.length-1; i++) {
-            if (dices[i].isMark()) {
+            if (dices[i].isMark()  ) {
                 markedDiceArray[i] = dices[i].getDiceSide();
                 dices[i].setSave(true);
+                dices[i].setMark(false);
                 selectImageEnable[i]=false;
             }
         }
         gameCalculator.setMarkedDiceArray(markedDiceArray);
+
     }
 
 
     private void calculateRoundScore(){
-        setScoreOfRound(gameCalculator.RoundScoreValue());
 
-        if (isFirstRound() && getScoreOfRound() > 300) {
+        setScoreOfRound( gameCalculator.RoundScoreValue());
+
+        if (isFirstRound() && getScoreOfRound() >= 300) {
             System.out.println("firstround access");
 
             setFirstRound(false);
-            gameFirstRound();
+            setSaveButton(true);
+            setScoreButton(false);
+            setThrowButton(true);
+            setRoundScoreTomap(getRound(), getScoreOfRound());
+
 
         } else if (isFirstRound() && getScoreOfRound() < 300) {
             System.out.println("first round is over");
             //TODO end the round
 
             setRoundScoreTomap(getRound(),0);
-            setScoreOfRound(0);
+
             setFirstRound(true);
             setThrowButton(true);
             setSaveButton(false);
@@ -192,39 +203,32 @@ public class GameState  {
     }
 
 
-    public void gameFirstRound(){
-        // disable touch imagebutton
-
-        setSaveButton(true);
-        setScoreButton(false);
-        setThrowButton(true);
-        setRoundScoreTomap(getRound(),getScoreOfRound());
-    }
 
 
     public void middleOfGame(){
 
-        if (getScoreOfRound()>50){
+        if (getScoreOfRound()>=50){
             setSaveButton(true);
-            setScoreButton(true);
-            setThrowButton(false);
-
-            setRoundScoreTomap(getRound(),(getRoundScoreFromMap(getRound())+getScoreOfRound()));
+            setScoreButton(false);
+            setThrowButton(true);
+            setFirstRound(false);
+            setRoundScoreTomap(getRound(), getRoundScoreFromMap(getRound())+ getScoreOfRound());
 
         }else {
-            setFirstRound(true);
-
+            setScoreOfRound(0);
             setRoundScoreTomap(getRound(),0);
+
             endOfGame();
         }
     }
+
     public void endOfGame(){
         setFirstRound(true);
         setThrowButton(true);
         setSaveButton(false);
         setScoreButton(false);
+        //Arrays.fill(markedDiceArray, 0, markedDiceArray.length, 0);
         reset();
-        Arrays.fill(selectImageEnable, true);
     }
 
     private void sumOfGame(){
@@ -243,5 +247,21 @@ public class GameState  {
             d.setSave(false);
 //            Arrays.fill(dices,0);
         }
+    }
+
+    public void markAllDice(){
+        for (Dice d: dices){
+            d.isSave();
+        }
+    }
+    public int countMarkedDice(){
+        int i=0;
+        for (Dice d: dices){
+            if (d.isMark()){
+                i++;
+            }
+
+        }
+        return  i;
     }
 }

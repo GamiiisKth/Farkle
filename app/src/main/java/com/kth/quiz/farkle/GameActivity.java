@@ -192,7 +192,7 @@ public class GameActivity extends ActionBarActivity {
         mImagePic5.setSelected(pic5);
         mImagePic6.setSelected(pic6);
 
-        mScoreText.setText(" " + gameState.getRoundScore());
+        mScoreText.setText(" " + gameState.getScoreOfRound());
         gameStateScoreText.setText(" "+gameState.getGameTotalScore());
         mRoundText.setText(" "+gameState.getRound());
 
