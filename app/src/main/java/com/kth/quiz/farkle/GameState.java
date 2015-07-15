@@ -16,7 +16,7 @@ public class GameState  {
     private Dice[] dices;
     private Subject subject;
     private boolean firstRound;
-    private int roundScore;
+    private int scoreOfRound;
     private int round;
     private int gameTotalScore;
     private boolean [] selectImageEnable;
@@ -32,13 +32,23 @@ public class GameState  {
     public GameState(){
         setFirstRound(true);
         setGameTotalScore(0);
-        setRoundScore(0);
         setRound(0);
+        setScoreOfRound(0);
+        setRoundScoreTomap(getRound(),getScoreOfRound());
         setSaveButton(false);
         setThrowButton(true);
 
         setScoreButton(false);
     }
+
+    public int getScoreOfRound() {
+        return scoreOfRound;
+    }
+
+    public void setScoreOfRound(int scoreOfRound) {
+        this.scoreOfRound = scoreOfRound;
+    }
+
     public boolean isFirstRound() {
         return firstRound;
     }
@@ -47,12 +57,12 @@ public class GameState  {
         this.firstRound = firstRound;
     }
 
-    public int getRoundScore() {
-        return roundScore;
+    public int getRoundScoreFromMap(int round) {
+        return roundAndScore.get(round);
     }
 
-    public void setRoundScore(int roundScore) {
-        this.roundScore = roundScore;
+    public void setRoundScoreTomap(int roundId,int roundScore) {
+        roundAndScore.put(roundId,roundScore);
     }
 
     public void setRound(int round) {
@@ -122,8 +132,6 @@ public class GameState  {
         setSaveButton(false);
         setScoreButton(true);
         setThrowButton(false);
-
-        roundAndScore.put(getRound(), getRoundScore());
         for (int a = 0; a <= dices.length - 1; a++) {
             if (!dices[a].isSave()) {
                 dices[a].setDiceSide((int) ((Math.random() * 6) + 1));
@@ -158,19 +166,20 @@ public class GameState  {
 
 
     private void calculateRoundScore(){
+        setScoreOfRound(gameCalculator.RoundScoreValue());
 
-        setRoundScore(gameCalculator.RoundScoreValue());
-        if (isFirstRound() && getRoundScore() > 300) {
+        if (isFirstRound() && getScoreOfRound() > 300) {
             System.out.println("firstround access");
 
             setFirstRound(false);
             gameFirstRound();
 
-        } else if (isFirstRound() && getRoundScore() < 300) {
+        } else if (isFirstRound() && getScoreOfRound() < 300) {
             System.out.println("first round is over");
             //TODO end the round
 
-            roundAndScore.put(getRound(), 0);
+            setRoundScoreTomap(getRound(),0);
+            setScoreOfRound(0);
             setFirstRound(true);
             setThrowButton(true);
             setSaveButton(false);
@@ -189,20 +198,23 @@ public class GameState  {
         setSaveButton(true);
         setScoreButton(false);
         setThrowButton(true);
-        roundAndScore.put(getRound(),(roundAndScore.get(getRound())) + getRoundScore());
+        setRoundScoreTomap(getRound(),getScoreOfRound());
     }
 
 
     public void middleOfGame(){
 
-        if (getRoundScore()>50){
+        if (getScoreOfRound()>50){
             setSaveButton(true);
             setScoreButton(true);
             setThrowButton(false);
-            roundAndScore.put(getRound(),(roundAndScore.get(getRound())) + getRoundScore());
+
+            setRoundScoreTomap(getRound(),(getRoundScoreFromMap(getRound())+getScoreOfRound()));
+
         }else {
             setFirstRound(true);
-            roundAndScore.put(getRound(),0);
+
+            setRoundScoreTomap(getRound(),0);
             endOfGame();
         }
     }
