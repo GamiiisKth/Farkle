@@ -11,7 +11,15 @@ import java.util.Arrays;
 public class GameCalculator  {
    private  int [] unique;
    private int [] markedDiceArray;
+   private boolean StraightFlush=false;
 
+    public boolean isStraightFlush() {
+        return StraightFlush;
+    }
+
+    public void setStraightFlush(boolean straightFlush) {
+        StraightFlush = straightFlush;
+    }
 
     public void setMarkedDiceArray(int[] marked) {
         markedDiceArray = new int[marked.length];
@@ -30,16 +38,18 @@ public class GameCalculator  {
 
         if (checkForStraightFlush(markedDiceArray)){
             sum=1000;
+            setStraightFlush(true);
         }else{
             sum=trippleOrOneORFive(markedDiceArray);
             //TODO arrayen kolla om det behövs
-            Arrays.fill(unique, 0);
+            //Arrays.fill(unique,, 0);
+            setStraightFlush(false);
         }
 
         return  sum;
     }
 
-    private   boolean checkForStraightFlush(int [] chek){
+    private boolean checkForStraightFlush(int [] chek){
         if (chek.length < 6){
             return false;
         }

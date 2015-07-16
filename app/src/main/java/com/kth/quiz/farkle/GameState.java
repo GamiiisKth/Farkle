@@ -165,6 +165,13 @@ public class GameState implements Parcelable {
             setRound(getRound()+1);
             setScoreOfRound(0);
             Arrays.fill(selectImageEnable, true);
+        }  if (gameCalculator.isStraightFlush() ){
+            resetTheSaveDice();
+        } if  ( countTheSaveDices()==6 && !isFirstRound()){
+            resetTheSaveDice();
+            setFirstRound(true);
+        }else if (countTheSaveDices()==6 && isFirstRound()){
+            resetTheSaveDice();
         }
         setSaveButton(false);
         setScoreButton(true);
@@ -206,16 +213,17 @@ public class GameState implements Parcelable {
 
     private void calculateRoundScore(){
 
-        setScoreOfRound( gameCalculator.RoundScoreValue());
+        setScoreOfRound(gameCalculator.RoundScoreValue());
 
         if (isFirstRound() && getScoreOfRound() >= 300) {
-            System.out.println("firstround access");
 
+            System.out.println("firstround access");
             setFirstRound(false);
             setSaveButton(true);
             setScoreButton(false);
             setThrowButton(true);
             setRoundScoreTomap(getRound(), getScoreOfRound());
+
 
 
         } else if (isFirstRound() && getScoreOfRound() < 300) {
@@ -245,7 +253,7 @@ public class GameState implements Parcelable {
             setScoreButton(false);
             setThrowButton(true);
             setFirstRound(false);
-            setRoundScoreTomap(getRound(), getRoundScoreFromMap(getRound())+ getScoreOfRound());
+            setRoundScoreTomap(getRound(), getRoundScoreFromMap(getRound()) + getScoreOfRound());
 
         }else {
             setScoreOfRound(0);
@@ -282,21 +290,21 @@ public class GameState implements Parcelable {
         }
     }
 
-    public void markAllDice(){
-        for (Dice d: dices){
-            d.isSave();
-        }
-    }
-    public int countMarkedDice(){
+    public int  countTheSaveDices(){
         int i=0;
         for (Dice d: dices){
-            if (d.isMark()){
+            if (d.isSave()){
                 i++;
             }
-
         }
-        return  i;
+        return i;
     }
+    public void resetTheSaveDice(){
+        for (Dice d: dices){
+            d.setSave(false);
+        }
+    }
+
 
     public void resetTheGame(){
         setScoreButton(false);
@@ -306,5 +314,13 @@ public class GameState implements Parcelable {
         setScoreOfRound(0);
         setGameTotalScore(0);
         setFirstRound(true);
+    }
+
+        // winner activity should start here
+    public void checkWinnerState(){
+        if (getGameTotalScore()>=10000){
+
+        }
+
     }
 }
