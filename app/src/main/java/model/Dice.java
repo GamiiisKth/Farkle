@@ -32,12 +32,4 @@ public class Dice   {
         this.save = save;
     }
 
-
-
-
-
-
-
-
-
 }

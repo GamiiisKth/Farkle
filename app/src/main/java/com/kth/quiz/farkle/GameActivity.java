@@ -1,33 +1,28 @@
 package com.kth.quiz.farkle;
 
 import android.app.Activity;
-import android.content.ContentValues;
 import android.content.SharedPreferences;
 import android.os.Bundle;
-import android.os.PersistableBundle;
-import android.support.v7.app.ActionBarActivity;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
-
 import com.google.gson.Gson;
-
-import model.Game;
 
 
 public class GameActivity extends Activity {
 
     private GameState gameState;
 
-    private boolean pic1;
-    private boolean pic2;
-    private boolean pic3;
-    private boolean pic4;
-    private boolean pic5;
-    private boolean pic6;
+    private boolean pic1=false;
+    private boolean pic2=false;
+    private boolean pic3=false;
+    private boolean pic4=false;
+    private boolean pic5=false;
+    private boolean pic6=false;
 
     private ImageButton mImagePic1;
     private ImageButton mImagePic2;
@@ -35,13 +30,6 @@ public class GameActivity extends Activity {
     private ImageButton mImagePic4;
     private ImageButton mImagePic5;
     private ImageButton mImagePic6;
-
-    private int button01pos = 0;
-    private int button02pos = 0;
-    private int button03pos = 0;
-    private int button04pos = 0;
-    private int button05pos = 0;
-    private int button06pos = 0;
 
     private Button mSaveButton;
     private Button mScoreButton;
@@ -74,7 +62,7 @@ public class GameActivity extends Activity {
             @Override
             public void onClick(View v) {
                 gameState.onSave();
-                updateView();
+               updateView();
             }
         });
         mScoreButton = (Button) findViewById(R.id.Score_Button);
@@ -188,20 +176,21 @@ public class GameActivity extends Activity {
 
             }
         });
-            LoadPreferences();
-            updateView();
+
+        LoadPreferences();
+        updateView();
 
     }
 
 
     @Override
-    public void onSaveInstanceState(Bundle outState) {
+    public void onSaveInstanceState(@NonNull Bundle outState) {
         outState.putParcelable(GAME_STATE_TAG, gameState);
         super.onSaveInstanceState(outState);
     }
 
     @Override
-    protected void onRestoreInstanceState(Bundle savedInstanceState) {
+    protected void onRestoreInstanceState(@NonNull Bundle savedInstanceState) {
      gameState=savedInstanceState.getParcelable(GAME_STATE_TAG);
         super.onRestoreInstanceState(savedInstanceState);
         updateView();
@@ -213,12 +202,7 @@ public class GameActivity extends Activity {
         SavePreferences();
     }
 
-    @Override
-    protected void onDestroy() {
-        gameState.resetTheGame();
-        gameState=null;
-        super.onDestroy();
-    }
+
 
     private void SavePreferences() {
         SharedPreferences sharedPreferences = getPreferences(MODE_PRIVATE);
@@ -239,6 +223,7 @@ public class GameActivity extends Activity {
             Log.d(TAG, "LoadPreferences():  mGame==null");
                 System.out.println("load is null");
             gameState = new GameState();
+            gameState.startGame();
         }
 
     }

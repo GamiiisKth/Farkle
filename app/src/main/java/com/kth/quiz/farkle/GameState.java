@@ -9,7 +9,6 @@ import java.util.HashMap;
 
 import model.Dice;
 import model.GameCalculator;
-import model.Subject;
 
 /**
  * Created by joshuapro on 15-07-13.
@@ -17,7 +16,6 @@ import model.Subject;
 public class GameState implements Parcelable {
 
     private Dice[] dices;
-    private Subject subject;
     private boolean firstRound=true;
     private int scoreOfRound=0;
     private int round=0;
@@ -54,17 +52,28 @@ public class GameState implements Parcelable {
     dest.writeInt(round);
     dest.writeInt(scoreOfRound);
     dest.writeInt(gameTotalScore);
-        boolean []value= new boolean[]{
+        boolean [] value= new boolean[]{
           isFirstRound(),
           isFirstRound(),
           isScoreButton(),
            isThrowButton()
         };
-
+        dest.writeBooleanArray(value);
     }
+    public static final Parcelable.Creator<GameState> CREATOR = new Parcelable.Creator<GameState>() {
+        @Override
+        public GameState createFromParcel(Parcel in) {
+            return new GameState(in);
+        }
+
+        @Override
+        public GameState[] newArray(int size) {
+            return new GameState[size];
+        }
+    };
     public GameState(){
-
     }
+
 
 
     public int getScoreOfRound() {
