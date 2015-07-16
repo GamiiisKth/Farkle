@@ -72,6 +72,7 @@ public class GameState implements Parcelable {
         }
     };
     public GameState(){
+        dices= new Dice[6];
     }
 
 
@@ -152,7 +153,6 @@ public class GameState implements Parcelable {
 
     // start a new game
     public void startGame(){
-        dices= new Dice[6];
         selectImageEnable = new boolean[dices.length];
         for (int i =0; i<= dices.length-1; i++){
             dices[i]=new Dice();
@@ -178,7 +178,7 @@ public class GameState implements Parcelable {
         setThrowButton(false);
         for (int a = 0; a <= dices.length - 1; a++) {
             if (!dices[a].isSave()) {
-                dices[a].setDiceSide(1);
+                dices[a].setDiceSide((int) ((Math.random() * 6) + 1));
                 selectImageEnable[a]=true;
                 // a+1 f�r stege
                 // (int) ((Math.random() * 6) + 1)
@@ -211,7 +211,7 @@ public class GameState implements Parcelable {
     }
 
 
-    private void calculateRoundScore(){
+    private void calculateRoundScore() {
 
         setScoreOfRound(gameCalculator.RoundScoreValue());
 
@@ -246,7 +246,7 @@ public class GameState implements Parcelable {
 
 
 
-    public void middleOfGame(){
+    public void middleOfGame() {
 
         if (getScoreOfRound()>=50){
 
@@ -306,7 +306,7 @@ public class GameState implements Parcelable {
         return i;
     }
     public void resetTheSaveDice(){
-        for (Dice d: dices){
+        for (Dice d : dices){
             d.setSave(false);
         }
     }
@@ -320,6 +320,8 @@ public class GameState implements Parcelable {
         setScoreOfRound(0);
         setGameTotalScore(0);
         setFirstRound(true);
+        roundAndScore.clear();
+        resetTheSaveDice();
     }
 
         // winner activity should start here

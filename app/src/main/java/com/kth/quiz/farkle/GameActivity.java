@@ -67,7 +67,7 @@ public class GameActivity extends Activity {
                     Intent intent= new Intent(getApplication(),WinnerActivity.class);
                     intent.putExtra("totalScore",gameState.getGameTotalScore());
                     intent.putExtra("round",gameState.getRound());
-                    startActivity(intent);
+                    startActivityForResult(intent,0);
                 }else {
                     updateView();
                 }
@@ -191,6 +191,21 @@ public class GameActivity extends Activity {
 
     }
 
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if(resultCode==RESULT_OK && requestCode==0){
+            if (data.hasExtra("pressed")){
+                gameState.resetTheGame();
+                gameState.resetTheSaveDice();
+                updateView();
+            }
+        }
+
+        super.onActivityResult(requestCode, resultCode, data);
+
+
+
+    }
 
     @Override
     public void onSaveInstanceState(@NonNull Bundle outState) {

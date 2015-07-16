@@ -9,10 +9,11 @@
 
 
     <TextView
-        android:text="@string/winner_text"
         android:id="@+id/winnerText"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:text="@string/win"
+        />
     <TextView
         android:layout_marginTop="20dp"
         android:layout_width="match_parent"
@@ -24,5 +25,7 @@
         android:layout_marginTop="50dp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/try_again_button"/>
+        android:id="@+id/try_again_button"
+        android:text="@string/try_again"
+        />
 </LinearLayout>

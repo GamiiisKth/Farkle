@@ -6,8 +6,8 @@
     <string name="title_activity_winner">WinnerActivity</string>
     <string name="round_titel">Round: </string>
     <string name="score_titel">Score: </string>
-    <string name="total_score">Total score</string>
-    <string name="winner_text">Congratulation you succeeded!</string>
+    <string name="total_score">Total score: </string>
+    <string name="win">Congratulation you succeeded!</string>
     <string name="result_specification1">You got </string>
     <string name="result_specification2">points after </string>
     <string name="result_specification3">points</string>
