@@ -178,7 +178,7 @@ public class GameState implements Parcelable {
         setThrowButton(false);
         for (int a = 0; a <= dices.length - 1; a++) {
             if (!dices[a].isSave()) {
-                dices[a].setDiceSide((int) ((Math.random() * 6) + 1));
+                dices[a].setDiceSide(1);
                 selectImageEnable[a]=true;
                 // a+1 f�r stege
                 // (int) ((Math.random() * 6) + 1)
@@ -249,10 +249,16 @@ public class GameState implements Parcelable {
     public void middleOfGame(){
 
         if (getScoreOfRound()>=50){
+
+            if (countTheSaveDices()==6){
+                setThrowButton(false);
+            }else{
+                setThrowButton(true);
+            }
+            setFirstRound(false);
             setSaveButton(true);
             setScoreButton(false);
-            setThrowButton(true);
-            setFirstRound(false);
+
             setRoundScoreTomap(getRound(), getRoundScoreFromMap(getRound()) + getScoreOfRound());
 
         }else {
@@ -317,10 +323,10 @@ public class GameState implements Parcelable {
     }
 
         // winner activity should start here
-    public void checkWinnerState(){
+    public boolean checkWinnerState(){
         if (getGameTotalScore()>=10000){
-
+            return true;
         }
-
+        return false;
     }
 }

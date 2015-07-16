@@ -1,6 +1,7 @@
 package com.kth.quiz.farkle;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -62,7 +63,15 @@ public class GameActivity extends Activity {
             @Override
             public void onClick(View v) {
                 gameState.onSave();
-               updateView();
+                if(gameState.checkWinnerState()){
+                    Intent intent= new Intent(getApplication(),WinnerActivity.class);
+                    intent.putExtra("totalScore",gameState.getGameTotalScore());
+                    intent.putExtra("round",gameState.getRound());
+                    startActivity(intent);
+                }else {
+                    updateView();
+                }
+
             }
         });
         mScoreButton = (Button) findViewById(R.id.Score_Button);
